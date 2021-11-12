@@ -473,24 +473,18 @@ load_buildtime() {
     done <<< $(callext rpm --root {} --query --all --queryformat='%{NVRA} %{BUILDTIME}\n')
 }
 
-# Return the timestamp of a repository from the metadata
-timestamp_for_repo() {
-    local file="/var/cache/zypp/raw/$1/repodata/repomd.xml"
-    re_findall '(?<=<revision>).*?(?=</revision>)' "$file"
-}
-
 # Return 0 if Zypper will ignore recommended packages
 only_requires() {
     local file="/etc/zypp/zypp.conf"
     callext grep --quiet '^solver.onlyRequires\s*=\s*true' "${SNAPSHOT_DIR}${file}"
-    return #?
+    return $?
 }
 
 # Return 0 if Zypper allow vendor change
 allow_vendor_change() {
     local file="/etc/zypp/zypp.conf"
     callext grep --quiet '^solver.allowVendorChange\s*=\s*true' "${SNAPSHOT_DIR}${file}"
-    return #?
+    return $?
 }
 
 # Create a libsolv testcase for a role
